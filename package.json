@@ -1,0 +1,22 @@
+{
+  "name": "modal",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://gitlab.com/ureil3307/jslearn.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://gitlab.com/ureil3307/jslearn/issues"
+  },
+  "homepage": "https://gitlab.com/ureil3307/jslearn#readme",
+  "devDependencies": {
+    "json-server": "^0.17.0"
+  }
+}

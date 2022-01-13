@@ -148,31 +148,31 @@ window.addEventListener("DOMContentLoaded", () => {
             `;
             // form.append(statusMassage);
             form.insertAdjacentElement('afterend', statusMassage);
-            
+
             const formData = new FormData(form); //если установлен FormData то нам не нужно setRequestHeader('Content-type', 'multipart/form-data') если отправляем джейсон то нужно request.setRequestHeader('Content-type', 'application/json');
-           
+
             const object = {};
             formData.forEach(function (value, key) {
                 object[key] = value;
             });
 
             fetch('server.php', {
-                method: 'POST',
-                headers: {
-                    'Content-type': 'application/json'
-                },
-                body: JSON.stringify(object)
-            })
-            .then(data => data.text())
-            .then(data => {
+                    method: 'POST',
+                    headers: {
+                        'Content-type': 'application/json'
+                    },
+                    body: JSON.stringify(object)
+                })
+                .then(data => data.text())
+                .then(data => {
                     console.log(data);
                     showThanksModal(message.success);
                     statusMassage.remove();
-            }).catch(() => {
-                showThanksModal(message.failure);
-            }).finally(() => {
-                form.reset();
-            })
+                }).catch(() => {
+                    showThanksModal(message.failure);
+                }).finally(() => {
+                    form.reset();
+                })
         });
     }
 
@@ -199,5 +199,7 @@ window.addEventListener("DOMContentLoaded", () => {
             hideModal(modal);
         }, 3000);
     }
-    
+    fetch('http://localhost:3000/menu')
+        .then(data => data.json())
+        .then(res => console.log(res));
 });
