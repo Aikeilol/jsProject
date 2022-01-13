@@ -91,8 +91,8 @@ window.addEventListener("DOMContentLoaded", () => {
 
     const modalTrigger = document.querySelectorAll("[data-modal]"),
         modal = document.querySelector('.modal');
-    
-        function openModal(){
+
+    function openModal() {
         modalTrigger.forEach(item => {
             item.addEventListener('click', (e) => {
                 modal.classList.add('show');
@@ -142,44 +142,43 @@ window.addEventListener("DOMContentLoaded", () => {
 
             const statusMassage = document.createElement('img');
             statusMassage.src = message.loading;
-            statusMassage.style.cssText =`
+            statusMassage.style.cssText = `
                 display: block;
                 margin: 0 auto;
             `;
             // form.append(statusMassage);
             form.insertAdjacentElement('afterend', statusMassage);
-
-            const request = new XMLHttpRequest();
-            request.open('POST', 'server.php');
-
-            request.setRequestHeader('Content-type', 'application/json');
+            
             const formData = new FormData(form); //если установлен FormData то нам не нужно setRequestHeader('Content-type', 'multipart/form-data') если отправляем джейсон то нужно request.setRequestHeader('Content-type', 'application/json');
+           
             const object = {};
             formData.forEach(function (value, key) {
                 object[key] = value;
             });
 
-            const json = JSON.stringify(object);
-
-            request.send(json);
-
-            request.addEventListener('load', () => {
-                if (request.status === 200) {
-                    console.log(request.response);
+            fetch('server.php', {
+                method: 'POST',
+                headers: {
+                    'Content-type': 'application/json'
+                },
+                body: JSON.stringify(object)
+            })
+            .then(data => data.text())
+            .then(data => {
+                    console.log(data);
                     showThanksModal(message.success);
-                    form.reset();
                     statusMassage.remove();
-                   
-                } else {
-                    showThanksModal(message.failure);
-                }
-            });
+            }).catch(() => {
+                showThanksModal(message.failure);
+            }).finally(() => {
+                form.reset();
+            })
         });
     }
 
-    function showThanksModal(message){
+    function showThanksModal(message) {
         const prevModalDialog = document.querySelector('.modal__dialog');
-        
+
         prevModalDialog.classList.add('hide');
         openModal();
 
@@ -191,13 +190,66 @@ window.addEventListener("DOMContentLoaded", () => {
             <div class ="modal__title">${message}</div>
         </div>
         `;
-        
+
         document.querySelector('.modal').append(thanksModal);
-        setTimeout(() =>{
+        setTimeout(() => {
             thanksModal.remove();
             prevModalDialog.classList.add('show');
             prevModalDialog.classList.remove('hide');
             hideModal(modal);
-        },3000);
+        }, 3000);
     }
+
+    // promise
+
+    console.log('Запрос данных...');
+
+    const req = new Promise(function (resolve, reject) {
+        setTimeout(() => {
+            console.log('Подготовка данных...');
+
+            const product = {
+                name: 'TV',
+                price: 2000
+            };
+
+            resolve(product);
+
+        }, 2000);
+    });
+
+    req.then((product) => {
+        return new Promise((resolve, reject) => {
+            setTimeout(() => {
+                product.status = 'order';
+                resolve(product);
+            }, 2000);
+        });
+    }).then(data => {
+        data.modify = true;
+        return data;
+    }).then((data) => {
+        console.log(data);
+    }).finally(() => {
+        console.log('finally');
+    });
+
+    const test = time => {
+        return new Promise(resolve => {
+            setTimeout(() => resolve(), time);
+        });
+    };
+    
+    // test(1000).then(() => console.log('1000 ms'));
+    // test(2000).then(() => console.log('2000 ms'));
+
+    Promise.all([test(1000), test(2000)]).then(() =>{
+        console.log('all done');
+    });
+
+    Promise.race([test(1000), test(2000)]).then(() =>{
+        console.log('one promise complete');
+    });
+
+    
 });
