@@ -626,7 +626,7 @@ function timer(id, deadline) {
 
   setClock(id, deadline);
 }
-/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (timer);
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (timer); 
 
 /***/ }),
 
